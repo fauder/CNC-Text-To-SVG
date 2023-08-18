@@ -60,26 +60,27 @@ int main( int argc, char** argv )
 
 	int error_code = 0;
 
-	bool silent_mode = false;
+	bool verbose = false;
 
 	if( const auto&& args = ParseCommandLineArguments( argc, argv ); args )
 	{
-		silent_mode = args->isSet( "silent" );
+		verbose = !args->isSet( "silent" );
 
 		const String directory( args->value( "directory" ) );
-		const auto extension_expected( args->value( "extension" ) );
+		const String extension_expected( args->value( "extension" ) );
 
 		const auto& file_info_list = FilterOutFilesToBeProcessed( args->value( "directory" ), args->value( "extension" ) );
 
-		for( auto& file_info : file_info_list )
-			std::cout << file_info.data() << "\n";
+		if( verbose )
+			for( auto& file_info : file_info_list )
+				std::cout << file_info.data() << "\n";
 	}
 	else
 		error_code = -1;
 
-	if( !silent_mode )
+	if( verbose )
 	{
-		std::cout << "Hit enter to exit the program.\n";
+		std::cout << "\nHit enter to exit the program... ";
 		std::cin.get(); // Wait for user to hit enter.
 	}
 
